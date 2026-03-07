@@ -1,9 +1,0 @@
-# ═══════════════════════════════════════════════════════════════════════
-# terraform.tfvars.example — Copy thành terraform.tfvars và điền giá trị thật
-# KHÔNG commit file terraform.tfvars lên git
-# ═══════════════════════════════════════════════════════════════════════
-
-project_id = "mlsa-k8s-capstone"
-admin_cidr = "YOUR_PUBLIC_IP/32"    # Lấy bằng: curl -s ifconfig.me
-# region   = "asia-southeast1"     # Uncomment nếu muốn override default
-# zone     = "asia-southeast1-b"   # Uncomment nếu muốn override default
