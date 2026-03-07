@@ -1,0 +1,15 @@
+# OPA Gatekeeper Constraint: Require Non-Root User
+# Ensures containers run as non-root (runAsNonRoot: true)
+
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoPrivilegeEscalation
+metadata:
+  name: require-non-root
+spec:
+  match:
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "falco"]
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]

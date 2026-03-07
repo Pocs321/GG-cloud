@@ -1,0 +1,45 @@
+# Binary Authorization Policy (L5)
+apiVersion: binaryauthorization.grafeas.io/v1beta1
+kind: Policy
+metadata:
+  name: binary-authorization-policy
+  namespace: security
+spec:
+  # Require all images to have a valid signature or attestation
+  globalPolicyEvaluationMode: ENABLE
+  defaultAdmissionRule:
+    evaluationMode: REQUIRE_ATTESTATION
+    enforcementMode: ENFORCED_BLOCK_AND_AUDIT_LOG
+    requireAttestationsBy:
+    - projects/mlsa-k8s-capstone/attestors/prod-attestor
+  kubernetesNamespaceAdmissionRules:
+    production:
+      evaluationMode: REQUIRE_ATTESTATION
+      enforcementMode: ENFORCED_BLOCK_AND_AUDIT_LOG
+    staging:
+      evaluationMode: ALWAYS_ALLOW  # Allow unsigned for testing
+      enforcementMode: DRYRUN_AUDIT_LOG_ONLY
+  admissionWhitelistPatterns:
+  # Allow Kubernetes system images
+  - namePattern: gcr.io/gke-release/*
+  - namePattern: gke.gcr.io/*
+  # Allow Istio, cert-manager, gatekeeper
+  - namePattern: istio/proxyv2:*
+  - namePattern: quay.io/jetstack/*
+  - namePattern: openpolicyagent/*
+  # Allow Falco
+  - namePattern: falcosecurity/*
+  # Allow demo images for testing
+  - namePattern: nginx:*
+  - namePattern: alpine:*
+---
+# ClusterRole for Binary Authorization management
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: binary-authorization-admin
+spec:
+  rules:
+  - apiGroups: ["binaryauthorization.grafeas.io"]
+    resources: ["policies"]
+    verbs: ["get", "list", "watch"]

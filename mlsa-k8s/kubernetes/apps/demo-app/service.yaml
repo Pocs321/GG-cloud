@@ -1,0 +1,19 @@
+# Demo App Service
+# Exposes demo-app internally
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app
+  namespace: production
+  labels:
+    app: demo-app
+spec:
+  type: ClusterIP
+  selector:
+    app: demo-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP

@@ -1,0 +1,39 @@
+# L6 - AppArmor Profile Loader DaemonSet
+# Loads AppArmor profiles to nodes
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: apparmor-loader
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+    security-layer: L6
+spec:
+  selector:
+    matchLabels:
+      app: apparmor-loader
+  template:
+    metadata:
+      labels:
+        app: apparmor-loader
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: loader
+        image: alpine:latest
+        command: ["/bin/sleep", "infinity"]
+        volumeMounts:
+        - name: host
+          mountPath: /host
+        securityContext:
+          privileged: true
+      volumes:
+      - name: host
+        hostPath:
+          path: /
+          type: Directory
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists

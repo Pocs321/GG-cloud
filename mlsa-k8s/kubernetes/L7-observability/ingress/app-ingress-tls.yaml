@@ -1,0 +1,29 @@
+# L7 - Application Ingress with TLS
+# Route external traffic to demo-app with HTTPS
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-app-ingress
+  namespace: production
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+  annotations:
+    cert-manager.io/cluster-issuer: istio-selfsigned
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - app.mlsa-k8s.local
+    secretName: demo-app-tls
+  rules:
+  - host: app.mlsa-k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-app
+            port:
+              number: 80

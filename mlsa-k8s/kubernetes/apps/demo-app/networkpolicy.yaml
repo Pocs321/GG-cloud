@@ -1,0 +1,31 @@
+# Demo App NetworkPolicy
+# Allows only production internal traffic + monitoring
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: demo-app-allow
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: demo-app
+  policyTypes: ["Ingress"]
+  ingress:
+  # Allow from monitoring namespace for Prometheus scraping
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8080
+  
+  # Allow from NGINX ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080

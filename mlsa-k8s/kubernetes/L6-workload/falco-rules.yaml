@@ -1,0 +1,42 @@
+# Pod Security Standards labels (L6)
+# Applied at namespace level - see namespaces.yaml for labels
+
+# Example: Falco SecurityPolicy for runtime monitoring (L6)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: falco-rules
+  namespace: falco
+data:
+  custom-rules.yaml: |
+    - rule: Unauthorized Process Execution
+      desc: Detect suspicious process execution
+      condition: spawned_process and container and not trusted_process
+      output: >
+        Suspicious process execution
+        (user=%user.name command=%proc.cmdline container_id=%container.id)
+      priority: WARNING
+    
+    - rule: Suspicious File Write
+      desc: Detect writes to sensitive directories
+      condition: open and container and fd.name startswith /etc/
+      output: >
+        Suspicious file write to /etc/
+        (user=%user.name file=%fd.name container_id=%container.id)
+      priority: CRITICAL
+    
+    - rule: Network Anomaly
+      desc: Detect unexpected network connections
+      condition: outbound and container and not allowed_egress_ports
+      output: >
+        Unexpected egress connection
+        (user=%user.name connection=%fd.name container_id=%container.id)
+      priority: WARNING
+    
+    - rule: Privilege Escalation Attempt
+      desc: Detect privilege escalation attempts
+      condition: syscall and name in (setuid, setgid, setfsgid, setfsuid) and not trusted_privilege_escalation
+      output: >
+        Privilege escalation attempt detected
+        (user=%user.name syscall=%syscall.name container_id=%container.id)
+      priority: CRITICAL

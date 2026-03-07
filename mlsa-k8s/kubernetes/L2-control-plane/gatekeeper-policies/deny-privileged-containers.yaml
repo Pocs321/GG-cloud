@@ -1,0 +1,15 @@
+# OPA Gatekeeper Constraint: Deny Privileged Containers
+# Prevents containers from running with privileged: true
+
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoPrivilegedContainer
+metadata:
+  name: deny-privileged-containers
+spec:
+  match:
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]

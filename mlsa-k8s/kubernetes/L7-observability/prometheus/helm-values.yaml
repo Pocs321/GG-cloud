@@ -1,0 +1,35 @@
+# L7 - Prometheus Helm Values
+# Configuration for Prometheus monitoring stack
+
+# Deploy with:
+# helm install kube-prometheus prometheus-community/kube-prometheus-stack \
+#   --namespace monitoring \
+#   -f kubernetes/L7-observability/prometheus/helm-values.yaml
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+grafana:
+  adminPassword: "admin"
+  persistence:
+    enabled: true
+    size: 5Gi
+
+alertmanager:
+  enabled: true

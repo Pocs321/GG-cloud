@@ -1,0 +1,14 @@
+# L6 - Pod Security Admission (PSA) Namespace Labels
+# Referenced in kubernetes/namespaces/ files
+
+# Restricted mode (production, staging):
+# pod-security.kubernetes.io/enforce: restricted
+# pod-security.kubernetes.io/audit: restricted
+# pod-security.kubernetes.io/warn: restricted
+
+# Privileged mode (falco):
+# pod-security.kubernetes.io/enforce: privileged
+
+# Baseline mode (monitoring):
+# pod-security.kubernetes.io/enforce: baseline
+# pod-security.kubernetes.io/audit: restricted

@@ -1,0 +1,10 @@
+# L3 - Istio Authorization Policies
+# Explicit allow rules for traffic authorization
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: default-deny
+  namespace: production
+spec:
+  rules: []

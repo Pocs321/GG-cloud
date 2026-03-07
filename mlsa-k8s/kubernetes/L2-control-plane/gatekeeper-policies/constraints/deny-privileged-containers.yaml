@@ -1,0 +1,18 @@
+# ═══════════════════════════════════════════════════════════════════════
+# Constraint — apply SAU khi ConstraintTemplate đã ready
+# ═══════════════════════════════════════════════════════════════════════
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sDenyPrivileged
+metadata:
+  name: deny-privileged-containers
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - kube-system
+      - gatekeeper-system
+      - falco                # Falco cần privileged access
+      - istio-system
+      - cert-manager

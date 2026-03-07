@@ -1,0 +1,12 @@
+# L7 - NGINX Ingress Class
+# Define ingress controller class for L7 exposure
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+    security-layer: L7
+spec:
+  controller: k8s.io/ingress-nginx
