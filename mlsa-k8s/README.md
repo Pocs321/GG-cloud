@@ -55,8 +55,7 @@ make deploy-all
 ## Directory Structure
 
 ```
-mlsa-k8s/
-├── CLAUDE.md                          # Full project specification
+mlsa-k8s/                         # Full project specification
 ├── README.md
 ├── .env.example
 ├── Makefile
@@ -140,5 +139,6 @@ Results saved to `evaluation/results/`
 ## License
 
 Educational use only - CMU Capstone Project 2025-2026
+
 
 
