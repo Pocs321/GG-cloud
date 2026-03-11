@@ -1,4 +1,6 @@
-# MLSA-K8S: Multi-Layer Security Architecture for Cloud-Native Systems on Kubernetes
+# DESIGN AND IMPLEMENTATION OF A DEFENSE-IN-DEPTH 
+SECURITY ARCHITECTURE FOR KUBERNETES 
+ENVIRONMENTS 
 
 Capstone Project 2 | CMU-CS 451 | International School, Duy Tan University  
 Team C2NE.03 | Supervisor: Eng. Binh, Van Nguyen
@@ -140,3 +142,4 @@ Results saved to `evaluation/results/`
 ## License
 
 Educational use only - CMU Capstone Project 2025-2026
+
