@@ -1,42 +1,81 @@
-# Baseline App Deployment
-# INTENTIONALLY INSECURE - for comparison with secured demo-app
+# Demo App Deployment
+# Fully secured with L6 security controls
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: baseline-app
+  name: demo-app
   namespace: production
   labels:
-    app: baseline-app
+    app: demo-app
     app.kubernetes.io/part-of: mlsa-k8s
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: baseline-app
+      app: demo-app
   template:
     metadata:
       labels:
-        app: baseline-app
+        app: demo-app
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/app: localhost/demo-app
     spec:
-      # ❌ Uses default SA
+      serviceAccountName: demo-app
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      
       containers:
       - name: app
         image: gcr.io/mlsa-k8s-capstone/demo-app:latest
+        imagePullPolicy: Always
         
-        # ❌ No resource limits
-        resources: {}
+        ports:
+        - containerPort: 8080
+          name: http
         
-        # ❌ No security context
-        securityContext: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+            add: ["NET_BIND_SERVICE"]
+        
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         
         volumeMounts:
-        - name: all
-          mountPath: /
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
       
-      # ❌ Allows all volumes
       volumes:
-      - name: all
-        hostPath:
-          path: /
-          type: Directory
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
