@@ -1,0 +1,18 @@
+# OPA Gatekeeper Constraint: Require Resource Limits
+# Ensures all containers have CPU and memory requests/limits
+
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredResources
+metadata:
+  name: require-resource-limits
+spec:
+  match:
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+  parameters:
+    cpu: "100m"
+    memory: "128Mi"

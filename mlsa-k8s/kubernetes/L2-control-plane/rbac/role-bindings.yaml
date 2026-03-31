@@ -1,0 +1,35 @@
+# L2 Control Plane - RBAC Role Bindings
+# Bind roles to service accounts in specific namespaces
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: app-reader-binding
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+    security-layer: L2
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: app-reader
+subjects:
+- kind: ServiceAccount
+  name: demo-app
+  namespace: production
+---
+# Deny cluster-admin for default service accounts
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: deny-default-admin
+  namespace: production
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: no-access
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: production

@@ -1,0 +1,39 @@
+# L6 - seccomp Profile Loader DaemonSet
+# Loads seccomp profiles to nodes
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: seccomp-loader
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+    security-layer: L6
+spec:
+  selector:
+    matchLabels:
+      app: seccomp-loader
+  template:
+    metadata:
+      labels:
+        app: seccomp-loader
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: loader
+        image: alpine:latest
+        command: ["/bin/sleep", "infinity"]
+        volumeMounts:
+        - name: host
+          mountPath: /host
+        securityContext:
+          privileged: true
+      volumes:
+      - name: host
+        hostPath:
+          path: /
+          type: Directory
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists

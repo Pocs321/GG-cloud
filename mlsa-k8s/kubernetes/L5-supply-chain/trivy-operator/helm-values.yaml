@@ -1,0 +1,32 @@
+# L5 - Trivy Operator Helm Values
+# Configuration for Trivy image scanning operator
+
+# This file documents the Helm values for Trivy Operator
+# Deploy with:
+# helm install trivy-operator aquasecurity/trivy-operator \
+#   --namespace trivy-system --create-namespace \
+#   -f kubernetes/L5-supply-chain/trivy-operator/helm-values.yaml
+
+scanJob:
+  timeout: 5m0s
+  ttlSecondsAfterFinished: 3600
+
+image:
+  registry: ghcr.io
+  repository: aquasecurity/trivy-operator
+  tag: 0.15.0
+
+serviceAccount:
+  create: true
+  name: trivy-operator
+
+# Security context
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534

@@ -1,0 +1,11 @@
+# L3 - cert-manager ClusterIssuer
+# Self-signed issuer for Istio CA certificates
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: istio-selfsigned
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+spec:
+  selfSigned: {}

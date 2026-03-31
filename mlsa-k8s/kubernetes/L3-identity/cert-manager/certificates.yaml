@@ -1,0 +1,17 @@
+# L3 - cert-manager Certificates
+# Root CA certificate for Istio mTLS
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: istio-root-ca
+  namespace: istio-system
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+spec:
+  secretName: istio-root-ca
+  commonName: "mlsa-k8s-root-ca"
+  isCA: true
+  issuerRef:
+    name: istio-selfsigned
+    kind: ClusterIssuer

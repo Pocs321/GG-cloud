@@ -1,0 +1,15 @@
+# OPA Gatekeeper Constraint: Restrict Host Namespaces
+# Prevents containers from using host PID, IPC, or networking
+
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoHostNamespace
+metadata:
+  name: restrict-host-namespaces
+spec:
+  match:
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "falco"]
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]

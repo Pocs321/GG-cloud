@@ -1,0 +1,30 @@
+# L6 - Falco Helm Values
+# Configuration for Falco runtime monitoring
+
+# Deploy with:
+# helm install falco falcosecurity/falco \
+#   --namespace falco --create-namespace \
+#   -f kubernetes/L6-workload/falco/helm-values.yaml
+
+falco:
+  grpc:
+    enabled: false
+  
+  grpcOutput:
+    enabled: false
+
+service:
+  type: ClusterIP
+  port: 5985
+
+daemonset:
+  environment:
+    FALCO_K8S_AUDIT_ENDPOINT: "http://localhost:8765"
+
+falcoctl:
+  artifact:
+    install:
+      enabled: true
+      refs: [falco-rules:latest]
+    follow:
+      enabled: true

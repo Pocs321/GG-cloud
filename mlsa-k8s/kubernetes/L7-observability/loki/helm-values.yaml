@@ -1,0 +1,24 @@
+# L7 - Loki Helm Values
+# Configuration for log aggregation
+
+# Deploy with:
+# helm install loki grafana/loki \
+#   --namespace monitoring \
+#   -f kubernetes/L7-observability/loki/helm-values.yaml
+
+loki:
+  auth_enabled: false
+  
+  ingester:
+    chunk_idle_period: 3m
+    chunk_retain_period: 1m
+    max_chunk_age: 1h
+  
+  limits_config:
+    enforce_metric_name: false
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h
+
+persistence:
+  enabled: true
+  size: 10Gi

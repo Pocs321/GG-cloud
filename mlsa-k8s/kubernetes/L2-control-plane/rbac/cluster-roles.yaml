@@ -1,0 +1,17 @@
+# L2 Control Plane - RBAC Cluster Roles
+# Define reusable permissions for application workloads
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: app-reader
+  labels:
+    app.kubernetes.io/part-of: mlsa-k8s
+    security-layer: L2
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/logs", "services"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets", "daemonsets"]
+  verbs: ["get", "list"]

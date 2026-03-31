@@ -1,0 +1,26 @@
+# ═══════════════════════════════════════════════════════════════════════
+# Gatekeeper Config — exclude system namespaces từ webhook
+# ═══════════════════════════════════════════════════════════════════════
+apiVersion: config.gatekeeper.sh/v1alpha1
+kind: Config
+metadata:
+  name: config
+  namespace: gatekeeper-system
+spec:
+  sync:
+    syncOnly:
+      - group: ""
+        version: "v1"
+        kind: "Namespace"
+      - group: ""
+        version: "v1"
+        kind: "Pod"
+  match:
+    - excludedNamespaces:
+        - kube-system
+        - gatekeeper-system
+        - cert-manager
+        - istio-system
+        - falco
+      processes:
+        - "*"

@@ -1,0 +1,34 @@
+# L6 - Falco Custom Rules
+# Runtime monitoring rules for security violations
+
+- rule: Unauthorized Process Execution
+  desc: Detect suspicious process execution in containers
+  condition: spawned_process and container and not trusted_process
+  output: >
+    Process execution detected:
+    user=%user.name command=%proc.cmdline container=%container.id
+  priority: WARNING
+
+- rule: Suspicious File Write
+  desc: Detect writes to /etc/ in containers
+  condition: open and container and write and fd.name startswith /etc/
+  output: >
+    File write to /etc/ detected:
+    user=%user.name file=%fd.name container=%container.id
+  priority: CRITICAL
+
+- rule: Network Anomaly
+  desc: Detect unexpected outbound connections
+  condition: outbound and container and not allowed_ports
+  output: >
+    Unexpected network connection:
+    user=%user.name connection=%fd.name container=%container.id
+  priority: WARNING
+
+- rule: Privilege Escalation
+  desc: Detect privilege escalation syscalls
+  condition: syscall and (name in (setuid, setgid, setfsgid, setfsuid)) and container
+  output: >
+    Privilege escalation attempt:
+    syscall=%syscall.name user=%user.name container=%container.id
+  priority: CRITICAL

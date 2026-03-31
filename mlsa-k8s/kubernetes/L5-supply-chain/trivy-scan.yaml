@@ -1,0 +1,44 @@
+# Trivy SecureImageScan CRD configuration (if using Trivy Operator)
+# This would be deployed via Helm or Operators in real implementation
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trivy-config
+  namespace: security
+data:
+  trivy.yaml: |
+    # Trivy scanner configuration
+    severity: CRITICAL,HIGH
+    vulnType: OS,LIBRARY
+    exitCode: 1
+    timeout: 10m0s
+    offline-db: false
+    offline-db-repository: "ghcr.io/aquasecurity/trivy-db:2"
+---
+# Scanning policy for container images
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: image-scan-policy
+  namespace: security
+data:
+  policy.yaml: |
+    # Image scanning policy
+    # Triggered on:
+    # 1. Image push to GCR
+    # 2. Deployment creation
+    # 3. CronJob periodic scan (daily)
+    
+    scan_on_push: true
+    scan_on_deploy: true
+    periodic_scan: true
+    scan_interval: "24h"
+    
+    max_critical: 0      # Zero-tolerance for CRITICAL vulnerabilities
+    max_high: 2          # Allow up to 2 HIGH vulnerabilities
+    max_medium: 5        # Allow up to 5 MEDIUM vulnerabilities
+    
+    action_critical: BLOCK
+    action_high: WARN
+    action_medium: LOG
